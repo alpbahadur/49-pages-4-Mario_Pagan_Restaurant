@@ -3,9 +3,907 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website</title>
+    <title>Mario Pagán Restaurant | The Architect of Flavor | Fine Dining in Condado, Puerto Rico</title>
+    <meta name="description" content="Experience contemporary Puerto Rican cuisine by acclaimed Chef Mario Pagán. Where architectural precision meets culinary artistry in the heart of Condado, San Juan.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #1a1a1a;
+            background-color: #F8F8F8;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Animated Background Canvas */
+        #blueprintCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        /* Navigation Styles */
+        nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        /* Hero Section */
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.7) 0%, rgba(26, 26, 26, 0.5) 100%);
+        }
+
+        /* Blueprint Line Animation */
+        .blueprint-border {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blueprint-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #BFA181;
+            transform: scale(0);
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .blueprint-border.visible::before {
+            transform: scale(1);
+        }
+
+        /* Fade In Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Image Hover Effects */
+        .image-hover {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .image-hover img {
+            transition: transform 0.5s ease;
+        }
+
+        .image-hover:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 26, 0.3);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .image-hover:hover::after {
+            opacity: 1;
+        }
+
+        /* Timeline Styles */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #BFA181;
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: top;
+            transition: transform 1.5s ease;
+        }
+
+        .timeline-line.visible {
+            transform: translateX(-50%) scaleY(1);
+        }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: #BFA181;
+            border: 4px solid #F8F8F8;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: #1a1a1a;
+            color: #FFFFFF;
+            padding: 16px 40px;
+            border-radius: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 14px;
+            border: 2px solid #1a1a1a;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: #1a1a1a;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #1a1a1a;
+            padding: 16px 40px;
+            border-radius: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 14px;
+            border: 2px solid #BFA181;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover {
+            background: #BFA181;
+            color: #FFFFFF;
+            border-color: #BFA181;
+        }
+
+        /* Grid Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2px;
+        }
+
+        @media (min-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Section Divider */
+        .section-divider {
+            width: 80px;
+            height: 2px;
+            background: #BFA181;
+            margin: 0 auto 2rem;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Menu Item Card */
+        .menu-card {
+            background: #FFFFFF;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(191, 161, 129, 0.1);
+        }
+
+        .menu-card:hover {
+            box-shadow: 0 8px 30px rgba(191, 161, 129, 0.15);
+            transform: translateY(-4px);
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading Animation for Images */
+        img {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        img.loaded {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-    <!-- Content will be added here -->
+    <!-- Blueprint Canvas Background -->
+    <canvas id="blueprintCanvas"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex justify-between items-center h-20 lg:h-24">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center">
+                    <img src="./assets/image_4.png" alt="Mario Pagán Restaurant" class="h-12 lg:h-16 loaded">
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8 lg:space-x-12">
+                    <a href="#home" class="text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Home</a>
+                    <a href="#story" class="text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Our Story</a>
+                    <a href="#menu" class="text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Menu</a>
+                    <a href="#gallery" class="text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Gallery</a>
+                    <a href="#reservations" class="btn-primary">Reserve</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-black focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50">
+            <div class="p-8">
+                <button id="closeMobileMenu" class="absolute top-6 right-6 text-black focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div class="mt-16 space-y-8">
+                    <a href="#home" class="block text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Home</a>
+                    <a href="#story" class="block text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Our Story</a>
+                    <a href="#menu" class="block text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Menu</a>
+                    <a href="#gallery" class="block text-sm font-light tracking-widest text-gray-700 hover:text-black transition-colors uppercase" style="font-family: 'Montserrat', sans-serif;">Gallery</a>
+                    <a href="#reservations" class="block btn-primary text-center mt-8">Reserve</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="./assets/image_2.webp" alt="Mario Pagán Restaurant" class="w-full h-full object-cover loaded">
+            <div class="hero-overlay absolute inset-0"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-light text-white mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif;">
+                Mario Pagán
+            </h1>
+            <div class="section-divider bg-white"></div>
+            <p class="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-light tracking-wide" style="font-family: 'Montserrat', sans-serif;">
+                The Architect of Flavor
+            </p>
+            <p class="text-lg md:text-xl text-white/90 mb-12 max-w-3xl mx-auto font-light">
+                Where architectural precision meets culinary artistry in contemporary Puerto Rican cuisine
+            </p>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="#menu" class="btn-primary bg-white text-black border-white hover:bg-transparent hover:text-white">Explore the Menu</a>
+                <a href="#story" class="btn-outline border-white text-white hover:bg-white hover:text-black">Our Story</a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 scroll-indicator">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-24 md:py-32 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="fade-in-up blueprint-border p-8">
+                    <img src="./assets/image_3.webp" alt="Fine Dining Experience" class="w-full h-auto loaded">
+                </div>
+                <div class="fade-in-up">
+                    <h2 class="text-4xl md:text-5xl font-light mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                        A Sensual Journey
+                    </h2>
+                    <div class="section-divider mx-0"></div>
+                    <p class="text-lg leading-relaxed mb-6 font-light" style="color: #6b7280;">
+                        At Mario Pagán Restaurant, every visit is a sensual journey into the soul of contemporary Puerto Rican cuisine. Located in the heart of Condado, our space is a polished expression of the culinary artistry of acclaimed Chef Mario Pagán.
+                    </p>
+                    <p class="text-lg leading-relaxed mb-8 font-light" style="color: #6b7280;">
+                        Bold innovation meets the richness of local ingredients to create dishes that captivate the senses. Whether you're indulging in an intimate dinner, sealing a deal over a business lunch, or gathering with loved ones for a celebration, each moment is designed to be unforgettable.
+                    </p>
+                    <a href="#reservations" class="btn-primary">Reserve Your Table</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story / Chef Section -->
+    <section id="story" class="py-24 md:py-32 bg-gray-50 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                    The Architect of Flavor
+                </h2>
+                <div class="section-divider"></div>
+                <p class="text-lg max-w-3xl mx-auto font-light" style="color: #6b7280;">
+                    From drafting tables to kitchen tables: The story of Chef Mario Pagán
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center mb-20">
+                <div class="fade-in-up order-2 md:order-1">
+                    <h3 class="text-3xl font-light mb-6" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                        From Architecture to Cuisine
+                    </h3>
+                    <p class="text-lg leading-relaxed mb-6 font-light" style="color: #6b7280;">
+                        Chef Mario Pagán is a renowned culinary innovator and passionate advocate for Puerto Rican cuisine. With over 20 years of experience, he has played a pivotal role in redefining and modernizing the island's culinary traditions.
+                    </p>
+                    <p class="text-lg leading-relaxed mb-6 font-light" style="color: #6b7280;">
+                        Born and raised in Puerto Rico, his early love for cooking was inspired by the women in his family. Though he initially pursued architecture in Miami, his passion led him to study at Johnson & Wales University and work under acclaimed chefs.
+                    </p>
+                    <p class="text-lg leading-relaxed mb-6 font-light" style="color: #6b7280;">
+                        His architectural background heavily influences his approach to food—viewing plating and flavor composition through the lens of structure, texture, and balance. Every dish is a carefully constructed masterpiece.
+                    </p>
+                </div>
+                <div class="fade-in-up blueprint-border order-1 md:order-2 p-8">
+                    <img src="./assets/image_1.webp" alt="Chef Mario Pagán" class="w-full h-auto loaded">
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="relative max-w-4xl mx-auto mt-20">
+                <div class="timeline-line"></div>
+
+                <!-- Timeline Item 1 -->
+                <div class="relative mb-16 fade-in-up">
+                    <div class="timeline-dot" style="top: 20px;"></div>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right">
+                            <div class="inline-block bg-black text-white px-6 py-2 mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 2px;">
+                                EARLY CAREER
+                            </div>
+                            <h4 class="text-2xl font-light mb-3" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                                Johnson & Wales University
+                            </h4>
+                            <p class="font-light" style="color: #6b7280;">
+                                After studying architecture in Miami, Mario followed his true passion to culinary school, training under renowned chefs and mastering the foundations of culinary artistry.
+                            </p>
+                        </div>
+                        <div class="hidden md:block"></div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="relative mb-16 fade-in-up">
+                    <div class="timeline-dot" style="top: 20px;"></div>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="hidden md:block"></div>
+                        <div>
+                            <div class="inline-block bg-BFA181 text-white px-6 py-2 mb-4" style="background: #BFA181; font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 2px;">
+                                BREAKTHROUGH
+                            </div>
+                            <h4 class="text-2xl font-light mb-3" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                                Chayote Restaurant
+                            </h4>
+                            <p class="font-light" style="color: #6b7280;">
+                                Purchased and transformed the iconic Chayote Restaurant, establishing his reputation as a pioneer of "Nueva Mesa Latina" - a modern interpretation of Latin cuisine.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="relative mb-16 fade-in-up">
+                    <div class="timeline-dot" style="top: 20px;"></div>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right">
+                            <div class="inline-block bg-black text-white px-6 py-2 mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 2px;">
+                                EXPANSION
+                            </div>
+                            <h4 class="text-2xl font-light mb-3" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                                Restaurant Empire
+                            </h4>
+                            <p class="font-light" style="color: #6b7280;">
+                                Launched several acclaimed restaurants including MARIO PAGÁN, RAYA, LA CENTRAL in Puerto Rico, and CHAYOTE Barrio Kitchen in Florida—his first U.S.-based venture.
+                            </p>
+                        </div>
+                        <div class="hidden md:block"></div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 4 -->
+                <div class="relative fade-in-up">
+                    <div class="timeline-dot" style="top: 20px;"></div>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="hidden md:block"></div>
+                        <div>
+                            <div class="inline-block bg-BFA181 text-white px-6 py-2 mb-4" style="background: #BFA181; font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 2px;">
+                                TODAY
+                            </div>
+                            <h4 class="text-2xl font-light mb-3" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                                Culinary Ambassador
+                            </h4>
+                            <p class="font-light" style="color: #6b7280;">
+                                Recognized by the James Beard Foundation, appeared on Food Network's "NEXT IRON CHEF," and continues to elevate Puerto Rico's gastronomic profile on the global stage.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="py-24 md:py-32 bg-white relative">
+        <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center">
+            <div class="fade-in-up blueprint-border p-12 md:p-16 bg-gray-50">
+                <h2 class="text-4xl md:text-5xl font-light mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                    Nueva Mesa Boricua
+                </h2>
+                <div class="section-divider"></div>
+                <p class="text-xl leading-relaxed mb-8 font-light italic" style="color: #6b7280;">
+                    "My cooking blends traditional Puerto Rican flavors with global influences, creating the foundation of the 'Nueva Mesa Boricua' movement—where heritage meets innovation on every plate."
+                </p>
+                <p class="text-lg leading-relaxed font-light" style="color: #6b7280;">
+                    Chef Mario's philosophy extends beyond the kitchen. He champions sustainability, supports local agriculture, and has earned recognition from the James Beard Foundation for his commitment to elevating Puerto Rican cuisine and culture around the world.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-24 md:py-32 bg-gray-50 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                    Culinary Compositions
+                </h2>
+                <div class="section-divider"></div>
+                <p class="text-lg max-w-3xl mx-auto font-light" style="color: #6b7280;">
+                    Each dish is meticulously crafted, balancing structure, texture, and bold Puerto Rican flavors
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="fade-in-up menu-card overflow-hidden image-hover">
+                    <img src="./assets/image_5.webp" alt="Appetizers" class="w-full h-64 object-cover loaded">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-light mb-3" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                            Bites
+                        </h3>
+                        <p class="font-light" style="color: #6b7280;">
+                            Sophisticated small plates featuring local ingredients and international techniques
+                        </p>
+                    </div>
+                </div>
+
+                <div class="fade-in-up menu-card overflow-hidden image-hover">
+                    <img src="./assets/image_6.webp" alt="Tastes" class="w-full h-64 object-cover loaded">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-light mb-3" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                            Tastes
+                        </h3>
+                        <p class="font-light" style="color: #6b7280;">
+                            Medium courses that showcase the depth and complexity of Caribbean flavors
+                        </p>
+                    </div>
+                </div>
+
+                <div class="fade-in-up menu-card overflow-hidden image-hover">
+                    <img src="./assets/image_7.webp" alt="Entrees" class="w-full h-64 object-cover loaded">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-light mb-3" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                            Eat
+                        </h3>
+                        <p class="font-light" style="color: #6b7280;">
+                            Masterfully executed main courses that celebrate Puerto Rico's culinary heritage
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center fade-in-up">
+                <p class="text-lg mb-8 font-light" style="color: #6b7280;">
+                    Our menu evolves with the seasons, featuring the freshest ingredients from local Puerto Rican farmers and fishermen
+                </p>
+                <a href="tel:787-522-6444" class="btn-outline">View Full Menu</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 md:py-32 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                    Gallery
+                </h2>
+                <div class="section-divider"></div>
+                <p class="text-lg max-w-3xl mx-auto font-light" style="color: #6b7280;">
+                    A visual journey through our culinary artistry and elegant ambiance
+                </p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="fade-in-up image-hover">
+                    <img src="./assets/image_8.webp" alt="Gallery Image" class="w-full h-80 object-cover loaded">
+                </div>
+                <div class="fade-in-up image-hover">
+                    <img src="./assets/image_9.webp" alt="Gallery Image" class="w-full h-80 object-cover loaded">
+                </div>
+                <div class="fade-in-up image-hover">
+                    <img src="./assets/image_10.webp" alt="Gallery Image" class="w-full h-80 object-cover loaded">
+                </div>
+                <div class="fade-in-up image-hover">
+                    <img src="./assets/image_11.webp" alt="Gallery Image" class="w-full h-80 object-cover loaded">
+                </div>
+                <div class="fade-in-up image-hover">
+                    <img src="./assets/image_12.webp" alt="Gallery Image" class="w-full h-80 object-cover loaded">
+                </div>
+                <div class="fade-in-up image-hover">
+                    <img src="./assets/image_13.webp" alt="Gallery Image" class="w-full h-80 object-cover loaded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Private Events Section -->
+    <section class="py-24 md:py-32 bg-gray-50 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="fade-in-up">
+                    <h2 class="text-4xl md:text-5xl font-light mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">
+                        Private Gatherings
+                    </h2>
+                    <div class="section-divider mx-0"></div>
+                    <p class="text-lg leading-relaxed mb-6 font-light" style="color: #6b7280;">
+                        Host your special occasion in our elegant private dining room. Whether it's a business dinner, family celebration, or intimate gathering, we create memorable experiences tailored to your needs.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 mr-3 mt-1" style="color: #BFA181;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <p class="font-light" style="color: #6b7280;">Private room accommodating up to 20 guests</p>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 mr-3 mt-1" style="color: #BFA181;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <p class="font-light" style="color: #6b7280;">Customizable menus crafted by Chef Mario Pagán</p>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 mr-3 mt-1" style="color: #BFA181;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <p class="font-light" style="color: #6b7280;">Dedicated service staff and sommelier</p>
+                        </div>
+                    </div>
+                    <a href="mailto:info@mariopaganrest.com" class="btn-primary">Inquire About Events</a>
+                </div>
+                <div class="fade-in-up blueprint-border p-8">
+                    <img src="./assets/image_14.webp" alt="Private Dining" class="w-full h-auto loaded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservations Section -->
+    <section id="reservations" class="py-24 md:py-32 bg-black text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <img src="./assets/image_2.webp" alt="Background" class="w-full h-full object-cover loaded">
+        </div>
+        <div class="max-w-4xl mx-auto px-6 lg:px-12 text-center relative z-10">
+            <div class="fade-in-up">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight" style="font-family: 'Montserrat', sans-serif;">
+                    Reserve Your Table
+                </h2>
+                <div class="section-divider bg-white"></div>
+                <p class="text-xl leading-relaxed mb-12 font-light text-white/90">
+                    Experience the intersection of architecture and cuisine. Book your culinary journey today.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="text-center">
+                        <h3 class="text-xl font-light mb-4" style="font-family: 'Montserrat', sans-serif;">Call Us</h3>
+                        <a href="tel:787-522-6444" class="text-2xl hover:text-gray-300 transition-colors" style="color: #BFA181;">787-522-6444</a>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-xl font-light mb-4" style="font-family: 'Montserrat', sans-serif;">Email</h3>
+                        <a href="mailto:info@mariopaganrest.com" class="text-lg hover:text-gray-300 transition-colors" style="color: #BFA181;">info@mariopaganrest.com</a>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <a href="tel:787-522-6444" class="btn-primary bg-white text-black border-white hover:bg-transparent hover:text-white">Call to Reserve</a>
+                    <a href="mailto:info@mariopaganrest.com" class="btn-outline border-white text-white hover:bg-white hover:text-black">Email Inquiry</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact -->
+    <footer class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <!-- Column 1 -->
+                <div>
+                    <img src="./assets/image_4.png" alt="Mario Pagán Restaurant" class="h-16 mb-6 loaded">
+                    <p class="text-sm font-light leading-relaxed" style="color: #6b7280;">
+                        Where architectural precision meets culinary artistry in contemporary Puerto Rican cuisine.
+                    </p>
+                </div>
+
+                <!-- Column 2 -->
+                <div>
+                    <h4 class="text-lg font-normal mb-4" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">Contact</h4>
+                    <div class="space-y-2 text-sm font-light" style="color: #6b7280;">
+                        <p>Condado, San Juan</p>
+                        <p>Puerto Rico</p>
+                        <p class="mt-4">
+                            <a href="tel:787-522-6444" class="hover:text-black transition-colors">787-522-6444</a>
+                        </p>
+                        <p>
+                            <a href="mailto:info@mariopaganrest.com" class="hover:text-black transition-colors">info@mariopaganrest.com</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Column 3 -->
+                <div>
+                    <h4 class="text-lg font-normal mb-4" style="font-family: 'Montserrat', sans-serif; color: #1a1a1a;">Experience</h4>
+                    <ul class="space-y-2 text-sm font-light" style="color: #6b7280;">
+                        <li>Fine Dining</li>
+                        <li>Lunch & Dinner</li>
+                        <li>Private Room</li>
+                        <li>Wine Cellar</li>
+                        <li>Valet Parking</li>
+                        <li>Full Bar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t pt-8 text-center" style="border-color: rgba(191, 161, 129, 0.2);">
+                <p class="text-sm font-light" style="color: #6b7280;">
+                    © 2025 Mario Pagán Restaurant. All rights reserved. | The Architect of Flavor
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ========== BLUEPRINT CANVAS ANIMATION ==========
+        const canvas = document.getElementById('blueprintCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        class BlueprintLine {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.length = Math.random() * 100 + 50;
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = 0.3;
+                this.opacity = Math.random() * 0.3 + 0.1;
+            }
+
+            update() {
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed;
+
+                if (this.x < -100 || this.x > canvas.width + 100 ||
+                    this.y < -100 || this.y > canvas.height + 100) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.strokeStyle = '#BFA181';
+                ctx.lineWidth = 1;
+
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(
+                    this.x + Math.cos(this.angle) * this.length,
+                    this.y + Math.sin(this.angle) * this.length
+                );
+                ctx.stroke();
+
+                ctx.restore();
+            }
+        }
+
+        const lines = [];
+        for (let i = 0; i < 30; i++) {
+            lines.push(new BlueprintLine());
+        }
+
+        function animateBlueprint() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            lines.forEach(line => {
+                line.update();
+                line.draw();
+            });
+
+            requestAnimationFrame(animateBlueprint);
+        }
+
+        animateBlueprint();
+
+        // ========== NAVIGATION SCROLL EFFECT ==========
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ========== MOBILE MENU ==========
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // ========== SCROLL ANIMATIONS ==========
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe fade-in elements
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Observe blueprint borders
+        document.querySelectorAll('.blueprint-border').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Observe timeline line
+        const timelineLine = document.querySelector('.timeline-line');
+        if (timelineLine) {
+            observer.observe(timelineLine);
+        }
+
+        // ========== SMOOTH SCROLL ==========
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========== IMAGE LOADING ==========
+        window.addEventListener('load', () => {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                if (img.complete) {
+                    img.classList.add('loaded');
+                } else {
+                    img.addEventListener('load', () => {
+                        img.classList.add('loaded');
+                    });
+                }
+            });
+        });
+
+        // ========== PARALLAX EFFECT ON HERO ==========
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroImage = document.querySelector('#home img');
+            if (heroImage && scrolled < window.innerHeight) {
+                heroImage.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+    </script>
 </body>
 </html>
